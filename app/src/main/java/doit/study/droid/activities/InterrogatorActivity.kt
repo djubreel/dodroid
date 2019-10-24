@@ -30,14 +30,18 @@ class InterrogatorActivity : DrawerBaseActivity(), InterrogatorFragment.OnFragme
     private var quizSize: Int = 0 // actual size can be lesser
     private var aprogress = -1 // quantity of answered questions
     private var pagerAdapter: InterrogatorPagerAdapter? = null
+    private var handler: Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (DEBUG) Timber.d("onCreate")
-        mSelectionId = R.id.nav_do_it
-        layoutInflater.inflate(R.layout.activity_interrogator, mContainerContent)
+        selectionId = R.id.nav_do_it
+
+        handler = Handler()
+
+        layoutInflater.inflate(R.layout.activity_interrogator, containerContent)
         supportLoaderManager.initLoader(QUESTION_LOADER, null, this@InterrogatorActivity)
-        pager = findViewById<View>(R.id.view_pager) as ViewPager
+        pager = findViewById(R.id.view_pager)
         configPagerTabStrip()
         pagerAdapter = InterrogatorPagerAdapter(supportFragmentManager, this)
         pager?.adapter = pagerAdapter
@@ -70,7 +74,7 @@ class InterrogatorActivity : DrawerBaseActivity(), InterrogatorFragment.OnFragme
 
 
     private fun configPagerTabStrip() {
-        val pagerTabStrip = pager!!.findViewById<View>(R.id.pager_title_strip) as PagerTabStrip
+        val pagerTabStrip = pager!!.findViewById<PagerTabStrip>(R.id.pager_title_strip)
         // show one title
         pagerTabStrip.setNonPrimaryAlpha(0f)
         // set the black underlining
@@ -96,13 +100,17 @@ class InterrogatorActivity : DrawerBaseActivity(), InterrogatorFragment.OnFragme
     }
 
     private fun showProgress() {
-        val handler = Handler()
-        handler.postDelayed({
+        handler?.postDelayed({
             if (DEBUG) Timber.d("swipe to the result page")
             pagerAdapter?.addResultPage(rightCnt, wrongCnt)
             title = getString(R.string.test_completed)
             pager?.setCurrentItem(quizSize, true)
         }, 2000)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler?.removeCallbacksAndMessages(null)
     }
 
     override fun swipeToNext(delay: Int) {
