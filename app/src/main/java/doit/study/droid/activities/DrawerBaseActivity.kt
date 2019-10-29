@@ -63,7 +63,9 @@ open class DrawerBaseActivity : AppCompatActivity(), NavigationView.OnNavigation
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                if (currentFocus != null) {
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                }
             }
         }
 

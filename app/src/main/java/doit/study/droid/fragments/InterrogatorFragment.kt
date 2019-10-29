@@ -22,6 +22,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.google.android.gms.analytics.HitBuilders
+import com.google.android.gms.analytics.Tracker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
@@ -37,6 +38,7 @@ import doit.study.droid.activities.SettingsActivity
 import doit.study.droid.app.App
 import doit.study.droid.data.Question
 import timber.log.Timber
+import javax.inject.Inject
 
 
 class InterrogatorFragment : LifecycleLogFragment(), View.OnClickListener {
@@ -57,6 +59,8 @@ class InterrogatorFragment : LifecycleLogFragment(), View.OnClickListener {
     private var mvQuestionText: TextView? = null
     private var mvAnswersLayout: ViewGroup? = null
     private var mvToast: Toast? = null
+    @Inject
+    lateinit var tracker: Tracker
 
     private val isVoted: Boolean
         get() {

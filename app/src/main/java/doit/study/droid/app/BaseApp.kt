@@ -4,25 +4,33 @@ import android.app.Application
 
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 
 import doit.study.droid.BuildConfig
-import doit.study.droid.R
 import doit.study.droid.data.QuizDataClient
+import doit.study.droid.di.components.ApplicationComponent
+import doit.study.droid.di.modules.ApplicationModule
+import doit.study.droid.di.components.DaggerApplicationComponent
 import io.fabric.sdk.android.Fabric
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 
 abstract class BaseApp : Application() {
+    lateinit var component: ApplicationComponent
+    @Inject
+    lateinit var tracker: Tracker
 
-    val tracker: Tracker by lazy {
-        val ga = GoogleAnalytics.getInstance(this)
-        ga.enableAutoActivityReports(this)
-        ga.newTracker(R.xml.track_app)
+    fun setupDagger() {
+        component = DaggerApplicationComponent.builder()
+                .applicationModule(ApplicationModule(this)).build()
+    }
+
+    fun getApplicationComponent(): ApplicationComponent {
+        return component
     }
 
     val quizService: QuizDataClient by lazy {
@@ -40,6 +48,7 @@ abstract class BaseApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        setupDagger()
         setupCrashlytics()
     }
 
