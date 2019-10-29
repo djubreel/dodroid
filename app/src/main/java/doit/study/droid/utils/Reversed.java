@@ -1,4 +1,4 @@
-package doit.study.droid.utils2;
+package doit.study.droid.utils;
 
 import java.util.Iterator;
 import java.util.List;

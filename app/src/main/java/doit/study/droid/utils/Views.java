@@ -1,4 +1,4 @@
-package doit.study.droid.utils2;
+package doit.study.droid.utils;
 
 import android.content.Context;
 import android.graphics.Rect;
